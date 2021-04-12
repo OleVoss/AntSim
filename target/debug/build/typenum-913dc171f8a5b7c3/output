@@ -1,0 +1,2 @@
+cargo:rustc-env=TYPENUM_BUILD_CONSTS=/home/voss/repos/AntSim/target/debug/build/typenum-913dc171f8a5b7c3/out/consts.rs
+cargo:rustc-env=TYPENUM_BUILD_OP=/home/voss/repos/AntSim/target/debug/build/typenum-913dc171f8a5b7c3/out/op.rs
