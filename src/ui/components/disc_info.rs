@@ -7,13 +7,9 @@ use tui::{
 
 use crate::{keys, style::SharedTheme, ui::widgets::DrawableComponent};
 
-use super::{disc_stats::DiscStats, flightpath::Flightpath};
-
 pub struct DiscInfo {
     pub focus: bool,
     theme: SharedTheme,
-    pub stats: DiscStats,
-    flightpath: Flightpath,
 }
 
 impl DiscInfo {
@@ -21,8 +17,6 @@ impl DiscInfo {
         Self {
             focus: false,
             theme: theme.clone(),
-            stats: DiscStats::new(theme.clone()),
-            flightpath: Flightpath::new(theme),
         }
     }
 }
@@ -42,8 +36,6 @@ impl DrawableComponent for DiscInfo {
             .split(rect);
 
         // f.render_widget(block, rect);
-        self.stats.draw(f, chunks[0], app)?;
-        self.flightpath.draw(f, chunks[1], app)?;
         Ok(())
     }
 }

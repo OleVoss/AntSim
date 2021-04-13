@@ -44,9 +44,10 @@ fn main() -> Result<()> {
 
     loop {
         // Simultaion
+        app.step()?;
 
         // Terminal
-        if poll(Duration::from_millis(500))? {
+        if poll(Duration::from_millis(100))? {
             match read()? {
                 Event::Key(ev) => {
                     controller::key_event(&mut app, ev, &mut ui)?;

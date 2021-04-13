@@ -6,7 +6,7 @@ use serde::__private::de;
 pub type SharedConfig = Rc<Config>;
 
 pub const STEPS: i64 = 10;
-
+pub const ANTHILL_RADIUS: i32 = 3;
 #[derive(Debug)]
 pub struct Config {
     // stat bounds

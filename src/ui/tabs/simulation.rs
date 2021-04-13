@@ -17,15 +17,11 @@ use crate::{
 
 pub struct Simulation {
     pub visible: bool,
-    pub scorecard: Scorecard,
 }
 
 impl Simulation {
     pub fn new(theme: SharedTheme) -> Self {
-        Self {
-            visible: false,
-            scorecard: Scorecard::new(theme),
-        }
+        Self { visible: false }
     }
 }
 
@@ -38,33 +34,25 @@ impl DrawableComponent for Simulation {
     ) -> Result<()> {
         let main_chunks = Layout::default()
             .direction(Direction::Vertical)
-            .constraints(
-                [
-                    Constraint::Percentage(7),
-                    Constraint::Percentage(80),
-                    Constraint::Percentage(13),
-                ]
-                .as_ref(),
-            )
+            .constraints([Constraint::Percentage(100)].as_ref())
             .split(rect);
 
-        // TODO: call the draw() function of the specific components
-        let scorecard_block = Block::default()
-            .title("Scorecard")
-            .borders(Borders::ALL)
-            .border_style(Style::default().fg(Color::White))
-            .border_type(BorderType::Plain);
-
         let hole_view = Block::default()
-            .title("Hole")
+            .title("Map")
             .borders(Borders::ALL)
             .border_style(Style::default().fg(Color::White))
             .border_type(BorderType::Plain);
 
-        let renderer = PrintRenderer::new(' ', 't', 'B', 'w', 'x', 'o');
+        let renderer = PrintRenderer::new('H', 'F', 'O', '*');
 
-        let final_string =
-            renderer.render(main_chunks[1].width as i64, main_chunks[1].height as i64);
+        let width = main_chunks[0].width as i32;
+        let height = main_chunks[0].height as i32;
+        let final_string = renderer.render(
+            &app.simulation.map,
+            app.simulation.colony.ants.clone(),
+            rect.width.into(),
+            rect.height.into(),
+        );
 
         let mut text: Vec<Spans> = Vec::new();
         for s in final_string {
@@ -73,10 +61,9 @@ impl DrawableComponent for Simulation {
         let para = Paragraph::new(text)
             .block(hole_view)
             // .alignment(Alignment::Left)
-            .style(Style::default().fg(Color::White).bg(Color::Black));
+            .style(Style::default().fg(Color::White));
 
-        f.render_widget(para, main_chunks[1]);
-        self.scorecard.draw(f, main_chunks[2], app)?;
+        f.render_widget(para, rect);
 
         Ok(())
     }

@@ -4,14 +4,13 @@ use std::fmt::Debug;
 
 #[derive(Debug, Clone, Copy, Deserialize)]
 pub enum AreaType {
-    Field,
-    Woods,
-    Bushes,
-    Bunker,
+    Anthill,
+    Food,
+    Obstacle,
 }
 
 #[derive(Debug, Clone, Deserialize)]
-pub enum AreaDirection {
+pub enum BorderDirection {
     Above,
     Beneath,
 }
@@ -20,7 +19,7 @@ pub enum AreaDirection {
 pub struct AreaBorder {
     #[serde(deserialize_with = "deserialize_function")]
     pub func: Box<dyn Fn(f64) -> f64>,
-    pub direction: AreaDirection,
+    pub direction: BorderDirection,
 }
 
 fn deserialize_function<'de, D>(data: D) -> Result<Box<dyn Fn(f64) -> f64>, D::Error>
@@ -39,8 +38,8 @@ where
 impl AreaBorder {
     pub fn match_direction(&self, f_y: f64, y: f64) -> bool {
         match self.direction {
-            AreaDirection::Above => f_y <= y,
-            AreaDirection::Beneath => f_y >= y,
+            BorderDirection::Above => f_y <= y,
+            BorderDirection::Beneath => f_y >= y,
         }
     }
 
@@ -66,7 +65,7 @@ pub struct Area {
 }
 
 impl Area {
-    pub fn new(functions: Vec<(&'static str, AreaDirection)>, area_type: AreaType) -> Self {
+    pub fn new(functions: Vec<(&'static str, BorderDirection)>, area_type: AreaType) -> Self {
         let mut borders: Vec<AreaBorder> = Vec::new();
         for (func_str, direction) in functions {
             let expr: Result<Expr, meval::Error> = func_str.parse();
@@ -99,7 +98,7 @@ impl Area {
 mod test {
     use meval::Expr;
 
-    use super::{Area, AreaBorder, AreaDirection, AreaType};
+    use super::{Area, AreaBorder, AreaType, BorderDirection};
 
     #[test]
     fn point_inside() {
@@ -107,14 +106,14 @@ mod test {
         let func = expr.bind("x").unwrap();
         let border_1 = AreaBorder {
             func: Box::new(func),
-            direction: super::AreaDirection::Beneath,
+            direction: super::BorderDirection::Beneath,
         };
 
         let expr: Expr = "0.05*(x-12)^2+1".parse().unwrap();
         let func = expr.bind("x").unwrap();
         let border_2 = AreaBorder {
             func: Box::new(func),
-            direction: super::AreaDirection::Above,
+            direction: super::BorderDirection::Above,
         };
 
         assert!(border_1.in_area(12., 5.));
@@ -131,10 +130,10 @@ mod test {
     fn inside_area() {
         let area = Area::new(
             vec![
-                ("-0.05*(x-12)^2+6", AreaDirection::Beneath),
-                ("0.05*(x-12)^2+1", AreaDirection::Above),
+                ("-0.05*(x-12)^2+6", BorderDirection::Beneath),
+                ("0.05*(x-12)^2+1", BorderDirection::Above),
             ],
-            AreaType::Woods,
+            AreaType::Food,
         );
 
         assert!(area.inside(12., 5., 1., 1.));

@@ -1,4 +1,4 @@
-use std::{fs, path::Path, rc::Rc};
+use std::{fs, path::Path, rc::Rc, thread};
 
 use anyhow::{bail, Result};
 use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers};
@@ -15,7 +15,7 @@ use tui::{
 
 use crate::{
     config::{self, Config, SharedConfig},
-    core::{map::course::Map, simulation::simulation::Simulation},
+    core::{map::map::Map, simulation::simulation::Simulation},
     draw,
     keys::{KeyConfig, SharedKeyConfig},
 };
@@ -41,13 +41,18 @@ impl App {
             app.load_discs();
         };
 
-        // let simulation = Simulation::new(course);
-        // app.simulation = simulation;
+        let simulation = Simulation::new(Map::new("Map", 100, 40));
+        app.simulation = simulation;
 
         return app;
     }
 
     pub fn start(&mut self) -> Result<()> {
+        self.simulation.step()?;
+        Ok(())
+    }
+
+    pub fn step(&mut self) -> Result<()> {
         self.simulation.step()?;
         Ok(())
     }
