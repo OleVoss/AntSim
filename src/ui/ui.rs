@@ -18,7 +18,7 @@ use tui::{
 };
 
 use super::{
-    tabs::{DiscTab, Overview, PlayerTab, Simulation},
+    tabs::{ConfigTab, EvalTab, Simulation},
     widgets::DrawableComponent,
 };
 
@@ -27,10 +27,9 @@ pub struct UI {
     pub key_config: SharedKeyConfig,
     pub config: SharedConfig,
     pub tab: usize,
-    overview_tab: Overview,
-    simulation_tab: Simulation,
-    pub player_tab: PlayerTab,
-    pub disc_tab: DiscTab,
+    pub config_tab: ConfigTab,
+    pub simulation_tab: Simulation,
+    pub eval_tab: EvalTab,
 }
 
 impl UI {
@@ -40,11 +39,10 @@ impl UI {
             theme: theme.clone(),
             key_config: Rc::new(KeyConfig::init()),
             config: Rc::new(Config::init()),
-            tab: 1,
-            overview_tab: Overview::new(),
+            tab: 0,
+            config_tab: ConfigTab::new(theme.clone()),
             simulation_tab: Simulation::new(theme.clone()),
-            player_tab: PlayerTab::new(theme.clone()),
-            disc_tab: DiscTab::new(theme),
+            eval_tab: EvalTab::new(theme),
         }
     }
 
@@ -67,10 +65,9 @@ impl UI {
 
         // TODO tab selection in UI rather than in APP
         match self.tab {
-            0 => self.overview_tab.draw(f, chunks_main[1], app)?,
-            1 => self.simulation_tab.draw(f, chunks_main[1], app)?,
-            3 => self.player_tab.draw(f, chunks_main[1], app)?,
-            4 => self.disc_tab.draw(f, chunks_main[1], app)?,
+            0 => self.simulation_tab.draw(f, chunks_main[1], app)?,
+            1 => self.config_tab.draw(f, chunks_main[1], app)?,
+            2 => self.eval_tab.draw(f, chunks_main[1], app)?,
             _ => bail!("unknown tab"),
         };
 
@@ -85,11 +82,9 @@ impl UI {
 
         // TODO: https://github.com/extrawurst/gitui/blob/master/src/app.rs Zeile 641-strings editable with config usw.
         let tabs = [
-            Span::raw("Overview [1]"),
-            Span::raw("Simulation [2]"),
-            Span::raw("Config [3]"),
-            Span::raw("Player [4]"),
-            Span::raw("Discs [5]"),
+            Span::raw("Simulation [1]"),
+            Span::raw("Config [2]"),
+            Span::raw("Evaluation [3]"),
         ]
         .iter()
         .cloned()
@@ -118,16 +113,12 @@ impl UI {
 
 impl UI {
     pub fn switch_tab(&mut self, k: KeyEvent) -> Result<()> {
-        if k == self.key_config.tab_overview {
+        if k == self.key_config.tab_simulation {
             self.set_tab(0)?;
-        } else if k == self.key_config.tab_simulation {
-            self.set_tab(1)?;
         } else if k == self.key_config.tab_config {
+            self.set_tab(1)?;
+        } else if k == self.key_config.tab_eval {
             self.set_tab(2)?;
-        } else if k == self.key_config.tab_player {
-            self.set_tab(3)?;
-        } else if k == self.key_config.tab_discs {
-            self.set_tab(4)?;
         }
 
         Ok(())

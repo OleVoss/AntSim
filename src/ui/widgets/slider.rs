@@ -89,7 +89,7 @@ impl<'a> Slider<'a> {
         self.to = value;
         self
     }
-    
+
     // TODO: fix call order; evaluations should be done in render()
     /// Should be called before value
     pub fn ignore_bounds(mut self, ignore: bool) -> Self {
@@ -110,7 +110,7 @@ impl<'a> Widget for Slider<'a> {
                         b = b.title(l);
                         b
                     }
-                    None => {b}
+                    None => b,
                 };
                 b.render(area, buf);
                 inner_area
@@ -141,8 +141,8 @@ impl<'a> Widget for Slider<'a> {
             width,
         );
 
-        let ratio = slider_area.width as f64 / self.to;
-        let value_x = slider_area.left() + (self.value * ratio) as u16;
+        let ratio = slider_area.width as f64 / (self.to - self.from);
+        let value_x = slider_area.left() + ((self.value - self.from) * ratio) as u16;
         let width = self.value.to_string().chars().count() as u16;
         if value_x < slider_area.right() || self.ignore_bounds {
             buf.set_span(
@@ -162,7 +162,7 @@ impl<'a> Widget for Slider<'a> {
         for x in slider_area.left()..slider_area.right() {
             buf.get_mut(x, slider_area.top() + 1)
                 .set_symbol(symbols::block::SEVEN_EIGHTHS);
-            if x < value_x {
+            if x <= value_x {
                 buf.get_mut(x, slider_area.top() + 1)
                     .set_style(self.highlight_style);
             } else if x > value_x {

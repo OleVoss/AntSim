@@ -1,6 +1,11 @@
 use std::default;
 
-use tui::{buffer::Buffer, layout::Rect, style::{Color, Style}, widgets::{Block, BorderType, Borders, StatefulWidget, Widget}};
+use tui::{
+    buffer::Buffer,
+    layout::Rect,
+    style::{Color, Style},
+    widgets::{Block, BorderType, Borders, StatefulWidget, Widget},
+};
 
 use super::Slider;
 
@@ -76,12 +81,16 @@ impl<'a> StatefulWidget for SliderList<'a> {
         };
 
         for (i, mut slider) in self.items.into_iter().enumerate() {
-            if i == state.selected().unwrap_or(0) && self.highlight_block.is_some() {
-                slider = slider.block(self.highlight_block.clone().unwrap()); // ok because is_some is checked
+            if list_area.y + Slider::HIGHT <= area.height {
+                if i == state.selected().unwrap_or(0) && self.highlight_block.is_some() {
+                    slider = slider.block(self.highlight_block.clone().unwrap());
+                    // ok because is_some is checked
+                }
+                let slider_area =
+                    Rect::new(list_area.x, list_area.y, list_area.width, Slider::HIGHT);
+                slider.render(slider_area, buf);
+                list_area.y += Slider::HIGHT;
             }
-            let slider_area = Rect::new(list_area.x, list_area.y, list_area.width, Slider::HIGHT);
-            slider.render(slider_area, buf);
-            list_area.y += Slider::HIGHT;
         }
     }
 }

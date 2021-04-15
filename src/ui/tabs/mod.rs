@@ -1,10 +1,7 @@
-pub mod overview;
-pub mod player_tab;
+pub mod config_tab;
+pub mod eval_tab;
 pub mod simulation;
-pub mod discs;
 
-pub use overview::Overview;
-pub use player_tab::PlayerTab;
-pub use player_tab::PlayerTabSections;
+pub use config_tab::ConfigTab;
+pub use eval_tab::EvalTab;
 pub use simulation::Simulation;
-pub use discs::DiscTab;

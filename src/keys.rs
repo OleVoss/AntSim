@@ -6,17 +6,23 @@ pub type SharedKeyConfig = Rc<KeyConfig>;
 #[derive(Debug)]
 pub struct KeyConfig {
     pub tab_overview: KeyEvent,
+    // simulation
     pub tab_simulation: KeyEvent,
     pub start_simulation: KeyEvent,
     pub step_simulation: KeyEvent,
+    pub spawn_ant: KeyEvent,
+    pub span_ant_bulk: KeyEvent,
+    pub reset_sim: KeyEvent,
+    pub pause_sim: KeyEvent,
+
+    // config
     pub tab_config: KeyEvent,
-    pub tab_player: KeyEvent,
-    pub player_list: KeyEvent,
-    pub slider_list: KeyEvent,
-    pub disc_bag: KeyEvent,
-    pub tab_discs: KeyEvent,
-    pub disc_list: KeyEvent,
-    pub disc_info: KeyEvent,
+    pub parameter_slider: KeyEvent,
+
+    // evaluation
+    pub tab_eval: KeyEvent,
+
+    // general
     pub select: KeyEvent,
     pub move_up: KeyEvent,
     pub move_down: KeyEvent,
@@ -31,52 +37,52 @@ impl Default for KeyConfig {
                 code: KeyCode::Char('1'),
                 modifiers: KeyModifiers::empty(),
             },
+
+            // simulation
             tab_simulation: KeyEvent {
-                code: KeyCode::Char('2'),
+                code: KeyCode::Char('1'),
                 modifiers: KeyModifiers::empty(),
             },
             start_simulation: KeyEvent {
                 code: KeyCode::Char('s'),
-                modifiers: KeyModifiers::SHIFT,
+                modifiers: KeyModifiers::CONTROL,
             },
             step_simulation: KeyEvent {
                 code: KeyCode::Char('s'),
                 modifiers: KeyModifiers::empty(),
             },
+            spawn_ant: KeyEvent {
+                code: KeyCode::Char('a'),
+                modifiers: KeyModifiers::empty(),
+            },
+            span_ant_bulk: KeyEvent {
+                code: KeyCode::Char('a'),
+                modifiers: KeyModifiers::CONTROL,
+            },
+            reset_sim: KeyEvent {
+                code: KeyCode::Char('r'),
+                modifiers: KeyModifiers::CONTROL,
+            },
+            pause_sim: KeyEvent {
+                code: KeyCode::Char(' '),
+                modifiers: KeyModifiers::empty(),
+            },
+
+            // config
             tab_config: KeyEvent {
-                code: KeyCode::Char('3'),
+                code: KeyCode::Char('2'),
                 modifiers: KeyModifiers::empty(),
             },
-            // player tab
-            tab_player: KeyEvent {
-                code: KeyCode::Char('4'),
-                modifiers: KeyModifiers::empty(),
-            },
-            player_list: KeyEvent {
+            parameter_slider: KeyEvent {
                 code: KeyCode::Char('p'),
                 modifiers: KeyModifiers::empty(),
             },
-            slider_list: KeyEvent {
-                code: KeyCode::Char('s'),
+            tab_eval: KeyEvent {
+                code: KeyCode::Char('3'),
                 modifiers: KeyModifiers::empty(),
             },
-            disc_bag: KeyEvent {
-                code: KeyCode::Char('b'),
-                modifiers: KeyModifiers::empty(),
-            },
-            // Disc Tab
-            tab_discs: KeyEvent {
-                code: KeyCode::Char('5'),
-                modifiers: KeyModifiers::empty(),
-            },
-            disc_list: KeyEvent {
-                code: KeyCode::Char('d'),
-                modifiers: KeyModifiers::empty(),
-            },
-            disc_info: KeyEvent {
-                code: KeyCode::Char('i'),
-                modifiers: KeyModifiers::empty(),
-            },
+
+            // general
             select: KeyEvent {
                 code: KeyCode::Enter,
                 modifiers: KeyModifiers::empty(),

@@ -1,11 +1,18 @@
 use nalgebra::Vector2;
-use rand::{distributions::Standard, prelude::Distribution, Rng};
+use rand::{
+    distributions::Standard,
+    prelude::{Distribution, SliceRandom, ThreadRng},
+    Rng,
+};
 use std::{f64::consts::PI, path::Ancestors};
 
 pub mod func;
 pub mod renderer;
 
-#[derive(Clone)]
+pub const FROM_U_D: [AntDirection; 2] = [AntDirection::Right, AntDirection::Left];
+pub const FROM_R_L: [AntDirection; 2] = [AntDirection::Up, AntDirection::Down];
+
+#[derive(Clone, Copy)]
 pub enum AntDirection {
     Up,
     Down,
@@ -20,6 +27,13 @@ impl AntDirection {
             AntDirection::Down => Vector2::new(0, -1),
             AntDirection::Right => Vector2::new(1, 0),
             AntDirection::Left => Vector2::new(-1, 0),
+        }
+    }
+
+    pub fn random_turn(self, rng: &mut ThreadRng) -> AntDirection {
+        match self {
+            AntDirection::Up | AntDirection::Down => *FROM_U_D.choose(rng).unwrap(),
+            AntDirection::Right | AntDirection::Left => *FROM_R_L.choose(rng).unwrap(),
         }
     }
 }

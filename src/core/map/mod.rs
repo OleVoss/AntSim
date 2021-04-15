@@ -2,7 +2,6 @@ use core::fmt::Debug;
 
 pub mod area;
 pub mod map;
-pub mod map_objects;
 
 use serde::de::value::BoolDeserializer;
 

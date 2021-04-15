@@ -3,12 +3,13 @@ use tui::{
     layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
     text::{Span, Spans},
-    widgets::{Block, BorderType, Borders, Paragraph},
+    widgets::{Block, BorderType, Borders, Paragraph, Row, Table},
     Frame,
 };
 
 use crate::{
     app::App,
+    core::simulation::colony::AntState,
     main,
     style::SharedTheme,
     ui::{components::scorecard::Scorecard, widgets::DrawableComponent},
@@ -34,8 +35,31 @@ impl DrawableComponent for Simulation {
     ) -> Result<()> {
         let main_chunks = Layout::default()
             .direction(Direction::Vertical)
-            .constraints([Constraint::Percentage(100)].as_ref())
+            .constraints([Constraint::Length(4), Constraint::Percentage(100)].as_ref())
             .split(rect);
+
+        let state_count = app.simulation.colony.ants.state_count();
+        let stats_view = Table::new(vec![Row::new(vec![
+            state_count.get(&AntState::Seeker).unwrap_or(&0).to_string(),
+            state_count
+                .get(&AntState::Returner)
+                .unwrap_or(&0)
+                .to_string(),
+            state_count
+                .get(&AntState::Follower)
+                .unwrap_or(&0)
+                .to_string(),
+            state_count.get(&AntState::Noob).unwrap_or(&0).to_string(),
+        ])
+        .height(1)])
+        .header(Row::new(vec!["Seeker", "Returner", "Follower", "Noobs"]))
+        .widths(&[
+            Constraint::Percentage(25),
+            Constraint::Percentage(25),
+            Constraint::Percentage(25),
+            Constraint::Percentage(25),
+        ])
+        .block(Block::default().borders(Borders::ALL).title("Ant count"));
 
         let hole_view = Block::default()
             .title("Map")
@@ -45,8 +69,8 @@ impl DrawableComponent for Simulation {
 
         let renderer = PrintRenderer::new('H', 'F', 'O', '*');
 
-        let width = main_chunks[0].width as i32;
-        let height = main_chunks[0].height as i32;
+        let width = main_chunks[1].width as i32;
+        let height = main_chunks[1].height as i32;
         let final_string = renderer.render(
             &app.simulation.map,
             app.simulation.colony.ants.clone(),
@@ -63,7 +87,8 @@ impl DrawableComponent for Simulation {
             // .alignment(Alignment::Left)
             .style(Style::default().fg(Color::White));
 
-        f.render_widget(para, rect);
+        f.render_widget(para, main_chunks[1]);
+        f.render_widget(stats_view, main_chunks[0]);
 
         Ok(())
     }

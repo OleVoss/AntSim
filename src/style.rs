@@ -53,14 +53,9 @@ impl Theme {
         }
     }
 
-    // pub fn slider_highlight(&self, stat_type: PlayerStatType) -> Color {
-    //     match stat_type {
-    //         PlayerStatType::Strength => self.strength_hightlight,
-    //         PlayerStatType::Precision => self.precision_highlight,
-    //         PlayerStatType::Endurance => self.endurance_highlight,
-    //         PlayerStatType::Luck => self.luck_highlight,
-    //     }
-    // }
+    pub fn slider_highlight(&self) -> Color {
+        todo!();
+    }
 
     pub fn highlight_block(&self) -> Block {
         // maybe need focus
@@ -81,12 +76,22 @@ impl Theme {
         todo!();
     }
 
-    // pub fn box_color(&self, stat: DiscStatType) -> Color {
-    //     match stat {
-    //         DiscStatType::Speed => self.speed_color,
-    //         DiscStatType::Glide => self.glide_color,
-    //         DiscStatType::Turn => self.turn_color,
-    //         DiscStatType::Fade => self.fade_color,
-    //     }
-    // }
+    //  .:-=+*#%@
+    pub fn grey_scale(amount: i32) -> char {
+        if amount >= 800 {
+            return '#';
+        } else if amount >= 600 {
+            return '%';
+        } else if amount >= 450 {
+            return '+';
+        } else if amount >= 300 {
+            return '=';
+        } else if amount >= 150 {
+            return '-';
+        } else if amount >= 100 {
+            return ':';
+        } else {
+            return '.';
+        }
+    }
 }

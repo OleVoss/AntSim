@@ -23,7 +23,8 @@ use crate::{
 pub struct App {
     pub simulation: Simulation,
     pub should_quit: bool,
-    pub config: SharedConfig,
+    // pub config: SharedConfig,
+    pub config: Config,
     pub key_config: SharedKeyConfig,
 }
 
@@ -32,7 +33,8 @@ impl App {
         let mut app = App {
             simulation: Simulation::default(),
             should_quit: false,
-            config: Rc::new(Config::init()),
+            // config: Rc::new(Config::init()),
+            config: Config::init(),
             key_config: Rc::new(KeyConfig::init()),
         };
 
@@ -41,7 +43,11 @@ impl App {
             app.load_discs();
         };
 
-        let simulation = Simulation::new(Map::new("Map", 100, 40));
+        let simulation = Simulation::new(Map::new(
+            "Map",
+            app.config.map_width.val(),
+            app.config.map_height.val(),
+        ));
         app.simulation = simulation;
 
         return app;
