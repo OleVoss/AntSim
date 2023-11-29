@@ -28,7 +28,7 @@ within the UI.
 
 Clone the repo and start the sim with `cargo run`, ideally outside an IDE since some keybindings can cause errors.
 
-> **_NOTE:_**: These is some unintended behavior regarding the ants, but nothing that causes major complications.
+> **_NOTE:_**: There are some unintended behavior regarding the ants, but nothing that causes major complications.
 
 ### Keybindings
 | Key           | Usage                                  |
